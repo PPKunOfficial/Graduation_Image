@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/mdui/0.4.3/css/mdui.min.css" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/layui/2.5.6/css/layui.min.css" media="all">
+</head>
+<body>
+<div class="mdui-container">
+	<div class="mdui-row">
+		<div class="mdui-col-md9">
+			<form action="/pcz/ac/login.php" method="post" class="layui-form" name="reg">
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<label class="mdui-textfield-label">真实姓名</label>
+					<input type="text" lay-verify="username|required" name="user_name" id="user_name" class="mdui-textfield-input" required/>
+					<div class="mdui-textfield-error">用户名不能为空</div>
+				</div>
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<label class="mdui-textfield-label">Password</label>
+					<input type="password" lay-verify="pass|required" name="pass_word" id="pass_word" class="mdui-textfield-input" required/>
+					<div class="mdui-textfield-error">密码输入有误</div>
+				</div>
+				<input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme" lay-submit lay-filter="js-log" type="submit" value="提交"/>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/gh/blueimp/JavaScript-MD5@2.16.0/js/md5.min.js"></script>
+<script src="/assets/accout.js"></script>
+<script src="https://cdn.staticfile.org/mdui/0.4.3/js/mdui.min.js"></script>
+<script src="https://cdn.staticfile.org/layui/2.5.6/layui.min.js"></script>
+<script>
+	layui.use("form",function(){
+		var form=layui.form;
+		form.on('submit(js-log)', function(data){
+			console.log(data.field)
+			user_name=data.field["user_name"];
+			pass_word=md5(data.field["pass_word"]);
+			now_unix_time=new Date().getTime();
+			ajax_log();
+			return false;
+		});
+		form.verify({
+			pass: [/^[\S]{6,50}$/,'密码必须6到50位，且不能出现空格'],
+			username: [/^[\S]{2,50}$/,'名称必须2到3位，且不能出现空格']
+		});
+	});
+</script>
+</html>

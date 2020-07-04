@@ -1,0 +1,77 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/mdui/0.4.3/css/mdui.min.css" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/layui/2.5.6/css/layui.min.css" media="all">
+</head>
+<body>
+<div class="mdui-container">
+	<div class="mdui-row">
+		<div class="mdui-col-md9">
+			<form action="/pcz/ac/reg.php" method="post" class="layui-form" name="reg">
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<label class="mdui-textfield-label">姓名</label>
+					<input type="text" lay-verify="username|required" name="user_name" pattern="^[\S]{2,3}$" id="user_name" class="mdui-textfield-input" required/>
+					<div class="mdui-textfield-error">姓名必须2-3位</div>
+				</div>
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<label class="mdui-textfield-label">名称</label>
+					<input type="text" lay-verify="usersname|required" name="user_sname" id="user_sname" pattern="^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$" class="mdui-textfield-input" required/>
+					<div class="mdui-textfield-error">名称输入格式有误</div>
+				</div>
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<label class="mdui-textfield-label">密码</label>
+					<input type="password" lay-verify="pass|required" name="pass_word" id="pass_word" pattern="^[\S]{6,50}$" class="mdui-textfield-input" required/>
+					<div class="mdui-textfield-error">密码输入有误</div>
+				</div>
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<label class="mdui-textfield-label">联系方式</label>
+					<input type="text" name="call_fs" id="call_fs" class="mdui-textfield-input"/>
+					<div class="mdui-textfield-error">联系方式不能为空</div>
+				</div>
+				<button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme" lay-submit lay-filter="js-reg" type="submit">提交</button>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/gh/blueimp/JavaScript-MD5@2.16.0/js/md5.min.js"></script>
+<script src="https://cdn.staticfile.org/mdui/0.4.3/js/mdui.min.js"></script>
+<script src="https://cdn.staticfile.org/layui/2.5.6/layui.min.js"></script>
+<script src="/assets/accout.js"></script>
+<script>
+	layui.use("form",function(){
+		var form=layui.form;
+		form.on('submit(js-reg)', function(data){
+			console.log(data.field)
+			user_name=data.field["user_name"];
+			pass_word=md5(data.field["pass_word"]);
+			user_sname=data.field["user_sname"];
+			if(data.field["call_fs"]!=""){
+				call_fs=data.field["call_fs"];
+			}
+			ajax_reg();
+			return false;
+		});
+		form.verify({
+		  usersname: function(value, item){
+			if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+			  return '名称不能有特殊字符';
+			}
+			if(/^[\S]$/.test(value)){
+				return '名称不能有空格';
+			}
+			if(/(^\_)|(\__)|(\_+$)/.test(value)){
+			  return '名称首尾不能出现下划线\'_\'';
+			}
+			if(/^\d+\d+\d$/.test(value)){
+			  return '名称不能全为数字';
+			}
+		  }
+		  ,pass: [/^[\S]{6,50}$/,'密码必须6到50位，且不能出现空格'],
+		  username: [/^[\S]{2,3}$/,'名称必须2到3位，且不能出现空格']
+		});
+	});
+</script>
+</html>
